@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <style>
+        #shape {
+            width: 100px;
+            height: 100px;
+            background-color: cornflowerblue;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="shape"></div>
+    <script src="../Scripts/jquery-1.6.4.min.js"></script>
+    <script src="../Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="../Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+
+        $(document).ready(function () {
+            var hub = $.connection.moveShape, $shape = $('#shape');
+
+            hub.client.shapeMoved = function (x, y) {
+                $shape.css({ left: x, top: y });
+            };
+
+            $.connection.hub.start().done(function () {
+                $shape.draggable({
+                    drag: function () {
+                        hub.server.moveShape(this.offsetLeft, this.offsetTop || 0);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

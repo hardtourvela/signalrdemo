@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+    <ul id="msgs"></ul>
+    <input type="text" id="msg"/>
+    <input type="button" id="send" value="Send" />
+    <script src="../Scripts/jquery-1.6.4.min.js"></script>
+    <script src="../Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>
+        $(document).ready(function () {
+            var hub = $.connection.chat;
+
+            hub.client.addMessage = function (msg) {
+                $('#msgs').append('<li>' + msg + '</li>');
+            };
+
+            $.connection.hub.start().done(function () {
+                $('#send').click(function () {
+                    hub.server.sendMessage($('#msg').val());
+                });
+            });
+        });
+    </script>
+</body>
+</html>
